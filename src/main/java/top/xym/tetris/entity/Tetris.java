@@ -261,6 +261,19 @@ public class Tetris extends JFrame implements KeyListener {
         label.setText("游戏得分：" + score);
     }
 
+    // 刷新移除某一行后的游戏界面的方法
+    public void reflesh(int row) {
+        for (int i = row; i >= 1; i--) {
+            for (int j = 1; j<= (game_y-2); j++) {
+                if (data[j][j] == 1) {
+                    text[i][j].setBackground(Color.BLUE);
+                }else {
+                    text[i][j].setBackground(Color.WHITE);
+                }
+            }
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
