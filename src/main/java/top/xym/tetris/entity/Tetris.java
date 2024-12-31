@@ -17,6 +17,9 @@ public class Tetris extends JFrame implements KeyListener {
     JLabel label1;
     // 显示游戏分数的标签
     JLabel label;
+    // 用于判断游戏是否结束
+    boolean isrunning;
+
     public void initWidow() {
         // 设置窗口大小
         this.setSize(500, 750);
@@ -100,10 +103,27 @@ public class Tetris extends JFrame implements KeyListener {
         initGamePanel();
         initExplainPanel();
         initWidow();
+        // 初始化开始游戏的标识
+        isrunning = true;
     }
 
     public static void main(String[] args) {
         Tetris tetris = new Tetris();
+    }
+
+    // 开始游戏的方法
+    public void game_begin() {
+        while (true) { // 游戏失败才结束，所以写个死循环
+            // 判断游戏是否结束
+            if (!isrunning) {
+                break;
+            }
+
+            // 进行游戏
+            game_run();
+        }
+        // 在标签位置显示“游戏结束”
+        label1.setText("游戏状态：游戏结束！");
     }
 
     @Override
