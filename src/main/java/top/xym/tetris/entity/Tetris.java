@@ -322,6 +322,30 @@ public class Tetris extends JFrame implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // 控制方块进行变形 空格键
+        if (e.getKeyChar() == KeyEvent.VK_SPACE) {
+            // 判断游戏是否结束
+            if (!isrunning) {
+                return;
+            }
+        }
+
+        // 定义变量，存储目前方块的索引
+        int old;
+        for (old = 0; old < allRect.length; old++) {
+            // 判断是否是当前方块
+            if (rect == allRect[old]) {
+                break;
+            }
+        }
+
+        // 定义变量，存储变形后方块
+        int next;
+
+        // 判断是方块
+        if (old == 0 || old == 7 || old == 8 || old == 9) {
+            return;
+        }
     }
 
     @Override
