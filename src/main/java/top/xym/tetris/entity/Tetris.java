@@ -346,6 +346,33 @@ public class Tetris extends JFrame implements KeyListener {
         if (old == 0 || old == 7 || old == 8 || old == 9) {
             return;
         }
+
+        // 清除当前方块
+        clear(x, y);
+
+        if (old == 1 || old == 2) {
+            next = allRect[old == 1 ? 2 : 1];
+
+            if (canTurn(next, x, y)) {
+                rect = next;
+            }
+        }
+
+        if (old >= 3 && old <= 6) {
+            next = allRect[old + 1 > 6 ? 3 : old + 1];
+
+            if (canTurn(next, x, y)) {
+                rect = next;
+            }
+        }
+
+        if (old == 10 || old == 11) {
+            next = allRect[old == 10 ? 11 : 10];
+
+            if (canTurn(next, x, y)) {
+                rect = next;
+            }
+        }
     }
 
     @Override
