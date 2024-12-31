@@ -416,6 +416,26 @@ public class Tetris extends JFrame implements KeyListener {
 
             draw(x, y);
         }
+
+        // 方块进行下落
+        if (e.getKeyCode() == 40) {
+            // 判断游戏是否结束
+            if (!isrunning) {
+                return;
+            }
+
+            // 判断方块是否可以下落
+            if (!canFall(x, y)) {
+                return;
+            }
+
+            clear(x, y);
+
+            // 改变方块的坐标
+            x++;
+
+            draw(x, y);
+        }
     }
 
     @Override
