@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 public class Tetris extends JFrame implements KeyListener {
     // 游戏的行数26，列数12
@@ -19,6 +20,10 @@ public class Tetris extends JFrame implements KeyListener {
     JLabel label;
     // 用于判断游戏是否结束
     boolean isrunning;
+    // 用于存储所有的方块的数组
+    int[] allRect;
+    // 用于存储当前方块的变量
+    int rect;
 
     public void initWidow() {
         // 设置窗口大小
@@ -105,6 +110,9 @@ public class Tetris extends JFrame implements KeyListener {
         initWidow();
         // 初始化开始游戏的标识
         isrunning = true;
+        // 初始化存放方块的数组
+        allRect = new int[] {0x00cc,0x8888,0x000f,0x888f,0xf111,0x111f,0x0eee,0xffff,0x0008,0x0888,0x000e,0x0088,
+        0x000c,0x08c8,0x00e4,0x04c4,0x004e,0x08c4,0x006c,0x04c8,0x00c6};
     }
 
     public static void main(String[] args) {
@@ -124,6 +132,13 @@ public class Tetris extends JFrame implements KeyListener {
         }
         // 在标签位置显示“游戏结束”
         label1.setText("游戏状态：游戏结束！");
+    }
+
+    // 随机生成下落方块形状的方法
+    public void ranRect() {
+        Random random = new Random();
+        // 0到21的数字即可
+        rect = allRect[random.nextInt(22)];
     }
 
     @Override
