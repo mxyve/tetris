@@ -24,7 +24,10 @@ public class Tetris extends JFrame implements KeyListener {
     int[] allRect;
     // 用于存储当前方块的变量
     int rect;
-
+    // 线程的休眠时间
+    int time = 1000;
+    // 表示方块坐标
+    int x,y;
     public void initWidow() {
         // 设置窗口大小
         this.setSize(500, 750);
@@ -139,6 +142,32 @@ public class Tetris extends JFrame implements KeyListener {
         Random random = new Random();
         // 0到21的数字即可
         rect = allRect[random.nextInt(22)];
+    }
+
+    // 游戏运行的方法
+    public void game_run() {
+        ranRect();
+        // 方块下落位置
+        x = 0;
+        y = 5;
+
+        for(int i = 0; i < game_x; i++){
+            try {
+                Thread.sleep(time);
+
+                // 判断方块是否可以下落
+                if (!canFall(x,y)) {
+
+                } else {
+                    // 层数+1
+                    x++;
+                    // 方块下落一行
+                    fall(x,y);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
