@@ -218,6 +218,24 @@ public class Tetris extends JFrame implements KeyListener {
         return true;
     }
 
+    // 改变不可下降的方块对应的区域的值的方法
+    public void changeData(int m,int n) {
+        // 定义一个变量
+        int temp = 0x8000;
+        // 遍历整个4 * 4的方块
+        for(int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if ((temp & rect) != 0) {
+                    data[m][n] = 1;
+                }
+                n++;
+                temp >>= 1;
+            }
+            m++;
+            n = n - 4;
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
