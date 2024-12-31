@@ -123,6 +123,7 @@ public class Tetris extends JFrame implements KeyListener {
 
     public static void main(String[] args) {
         Tetris tetris = new Tetris();
+        tetris.game_begin();
     }
 
     // 开始游戏的方法
