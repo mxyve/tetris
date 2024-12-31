@@ -285,6 +285,23 @@ public class Tetris extends JFrame implements KeyListener {
         draw(m, n);
     }
 
+    // 清除方块掉落后，上一层有颜色的地方的方法
+    public void clear(int m, int n) {
+        // 定义变量
+        int temp = 0x8000;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if ((temp & rect) != 0) {
+                    text[m][n].setBackground(Color.WHITE);
+                }
+                n++;
+                temp >>= 1;
+            }
+            m++;
+            n = n - 4;
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
