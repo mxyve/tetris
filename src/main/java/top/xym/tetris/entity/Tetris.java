@@ -31,6 +31,10 @@ public class Tetris extends JFrame implements KeyListener {
     int x,y;
     // 该变量用于计算得分
     int score = 0;
+    // 定义一个标志变量，用于判断游戏是否暂停
+    boolean game_pause = false;
+    // 定义一个变量用于记录按下暂停键的次数
+    int pause_times = 0;
     public void initWidow() {
         // 设置窗口大小
         this.setSize(500, 750);
@@ -159,39 +163,44 @@ public class Tetris extends JFrame implements KeyListener {
             try {
                 Thread.sleep(time);
 
-                // 判断方块是否可以下落
-                if (!canFall(x,y)) {
-                    // 将data置为1，表示有方块占用
-                    changeData(x,y);
-                    // 循环遍历4层，看是否有行可以消除
-                    for(int j = x; j < x + 4; j++) {
-                        //统计有多少列有方块
-                        int sum = 0;
-                        for(int k = 1; k < (game_y-2); k++) {
-                            if (data[j][k] == 1) {
-                                sum++;
+                // 判断游戏是否暂停
+                if (game_pause) {
+                    i--;
+                } else {
+                    // 判断方块是否可以下落
+                    if (!canFall(x,y)) {
+                        // 将data置为1，表示有方块占用
+                        changeData(x,y);
+                        // 循环遍历4层，看是否有行可以消除
+                        for(int j = x; j < x + 4; j++) {
+                            //统计有多少列有方块
+                            int sum = 0;
+                            for(int k = 1; k < (game_y-2); k++) {
+                                if (data[j][k] == 1) {
+                                    sum++;
+                                }
+                            }
+
+                            // 判断是否有一行可以被消除
+                            if (sum == (game_y-2)) {
+                                // 消除这一行
+                                removeRow(j);
                             }
                         }
-
-                        // 判断是否有一行可以被消除
-                        if (sum == (game_y-2)) {
-                            // 消除这一行
-                            removeRow(j);
+                        // 判断游戏是否失败
+                        for (int j = 1; j <= (game_y-2); j++) {
+                            if(data[3][j] == 1){
+                                isrunning = false;
+                                break;
+                            }
                         }
+                        break;
+                    } else {
+                        // 层数+1
+                        x++;
+                        // 方块下落一行
+                        fall(x,y);
                     }
-                    // 判断游戏是否失败
-                    for (int j = 1; j <= (game_y-2); j++) {
-                        if(data[3][j] == 1){
-                            isrunning = false;
-                            break;
-                        }
-                    }
-                    break;
-                } else {
-                    // 层数+1
-                    x++;
-                    // 方块下落一行
-                    fall(x,y);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -322,93 +331,142 @@ public class Tetris extends JFrame implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // 控制游戏暂停
+        if (e.getKeyChar() == 'p') {
+            // 判断游戏是否结束
+            if (!isrunning) {
+                return;
+            }
+
+            pause_times++;
+
+            // 判断按下一次，暂停游戏
+            if (pause_times == 1) {
+                game_pause = true;
+                label1.setText("游戏状态： 暂停中！");
+            }
+
+            // 判断按下一次，暂停游戏
+            if (pause_times == 2) {
+                game_pause = false;
+                pause_times = 0;
+                label1.setText("游戏状态： 正在进行中！");
+            }
+        }
+
         // 控制方块进行变形 空格键
         if (e.getKeyChar() == KeyEvent.VK_SPACE) {
             // 判断游戏是否结束
             if (!isrunning) {
                 return;
             }
-        }
 
-        // 定义变量，存储目前方块的索引
-        int old;
-        for (old = 0; old < allRect.length; old++) {
-            // 判断是否是当前方块
-            if (rect == allRect[old]) {
-                break;
+            // 判断游戏是否暂停
+            if (game_pause) {
+                return;
             }
-        }
 
-        // 定义变量，存储变形后方块
-        int next;
-
-        // 判断是方块
-        if (old == 0 || old == 7 || old == 8 || old == 9) {
-            return;
-        }
-
-        // 清除当前方块
-        clear(x, y);
-
-        if (old == 1 || old == 2) {
-            next = allRect[old == 1 ? 2 : 1];
-
-            if (canTurn(next, x, y)) {
-                rect = next;
+            // 定义变量，存储目前方块的索引
+            int old;
+            for (old = 0; old < allRect.length; old++) {
+                // 判断是否是当前方块
+                if (rect == allRect[old]) {
+                    break;
+                }
             }
-        }
 
-        if (old >= 3 && old <= 6) {
-            next = allRect[old + 1 > 6 ? 3 : old + 1];
+            // 定义变量，存储变形后方块
+            int next;
 
-            if (canTurn(next, x, y)) {
-                rect = next;
+            // 判断是方块
+            if (old == 0 || old == 7 || old == 8 || old == 9) {
+                return;
             }
-        }
 
-        if (old == 10 || old == 11) {
-            next = allRect[old == 10 ? 11 : 10];
+            // 清除当前方块
+            clear(x, y);
 
-            if (canTurn(next, x, y)) {
-                rect = next;
+            if (old == 1 || old == 2) {
+                next = allRect[old == 1 ? 2 : 1];
+
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
             }
-        }
 
-        if (old == 12 || old == 13) {
-            next = allRect[old == 12 ? 13 : 12];
+            if (old >= 3 && old <= 6) {
+                next = allRect[old + 1 > 6 ? 3 : old + 1];
 
-            if (canTurn(next, x, y)) {
-                rect = next;
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
             }
-        }
 
-        if (old >= 14 || old <= 17) {
-            next = allRect[old + 1 > 17 ? 14 : old + 1];
+            if (old == 10 || old == 11) {
+                next = allRect[old == 10 ? 11 : 10];
 
-            if (canTurn(next, x, y)) {
-                rect = next;
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
             }
-        }
 
-        if (old == 18 || old == 19) {
-            next = allRect[old == 18 ? 19 : 18];
+            if (old == 12 || old == 13) {
+                next = allRect[old == 12 ? 13 : 12];
 
-            if (canTurn(next, x, y)) {
-                rect = next;
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
             }
-        }
 
-        if (old == 20 || old == 21) {
-            next = allRect[old == 20 ? 21 : 20];
+            if (old >= 14 || old <= 17) {
+                next = allRect[old + 1 > 17 ? 14 : old + 1];
 
-            if (canTurn(next, x, y)) {
-                rect = next;
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
             }
+
+            if (old == 18 || old == 19) {
+                next = allRect[old == 18 ? 19 : 18];
+
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
+            }
+
+            if (old == 20 || old == 21) {
+                next = allRect[old == 20 ? 21 : 20];
+
+                if (canTurn(next, x, y)) {
+                    rect = next;
+                }
+            }
+
+            // 重新绘制变形后的方块
+            draw(x, y);
         }
+    }
 
-        // 重新绘制变形后的方块
-        draw(x,y);
-
+    // 判断方块是否可以变形的方法
+    public boolean canTurn(int a, int m, int n) {
+        // 创建变量
+        int temp = 0x8000;
+        // 遍历整个方块
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if ((temp & a) != 0) {
+                    if (data[m][n] == 1) {
+                        return false;
+                    }
+                }
+                n++;
+                temp >>= 1;
+            }
+            m++;
+            n = n - 4;
+        }
+        // 可以变形
+        return true;
     }
 
     @Override
@@ -417,6 +475,11 @@ public class Tetris extends JFrame implements KeyListener {
         if (e.getKeyCode() == 37) {
             // 判断游戏是否结束
             if (!isrunning) {
+                return;
+            }
+
+            // 判断游戏是否暂停
+            if (game_pause) {
                 return;
             }
 
@@ -452,6 +515,11 @@ public class Tetris extends JFrame implements KeyListener {
         if (e.getKeyCode() == 39) {
             // 判断游戏是否结束
             if (!isrunning) {
+                return;
+            }
+
+            // 判断游戏是否暂停
+            if (game_pause) {
                 return;
             }
 
@@ -508,6 +576,11 @@ public class Tetris extends JFrame implements KeyListener {
         if (e.getKeyCode() == 40) {
             // 判断游戏是否结束
             if (!isrunning) {
+                return;
+            }
+
+            // 判断游戏是否暂停
+            if (game_pause) {
                 return;
             }
 
