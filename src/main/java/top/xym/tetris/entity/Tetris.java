@@ -28,6 +28,8 @@ public class Tetris extends JFrame implements KeyListener {
     int time = 1000;
     // 表示方块坐标
     int x,y;
+    // 该变量用于计算得分
+    int score = 0;
     public void initWidow() {
         // 设置窗口大小
         this.setSize(500, 750);
@@ -234,6 +236,29 @@ public class Tetris extends JFrame implements KeyListener {
             m++;
             n = n - 4;
         }
+    }
+
+    // 移除某一行方块，令以上方块掉落的方法
+    public void removeRow(int row) {
+        int temp = 100;
+        for(int i = row; i > 1; i--) {
+            for(int j = 1; j < (game_y-2); j++) {
+                // 进行覆盖
+                data[i][j] = data[i-1][j];
+            }
+        }
+        // 刷新游戏区域
+        reflesh(row);
+
+        // 方块加速
+        if (time > temp) {
+            time -= temp;
+        }
+
+        score += temp;
+
+        // 显示变化后的分数
+        label.setText("游戏得分：" + score);
     }
 
     @Override
