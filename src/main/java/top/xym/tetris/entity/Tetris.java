@@ -326,6 +326,40 @@ public class Tetris extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        // 方块进行左移
+        if (e.getKeyCode() == 37) {
+            // 判断游戏是否结束
+            if (!isrunning) {
+                return;
+            }
+
+            // 方块是否碰到左墙壁
+            if (y <= 1) {
+                return;
+            }
+
+            // 定义一个变量
+            int temp = 0x8000;
+
+            // 双重循环，遍历方块此时的位置
+            for (int i = x; i < x + 4; i++) {
+                for(int j = y; j < y + 4; j++) {
+                    if ((temp & rect) != 0) {
+                        if (data[i][j-1] == 1) {
+                            return;
+                        }
+                    }
+                    temp >>= 1;
+                }
+            }
+
+            // 首先清除目前方块
+            clear(x, y);
+
+            y--;
+
+            draw(x, y);
+        }
     }
 
     @Override
