@@ -195,6 +195,29 @@ public class Tetris extends JFrame implements KeyListener {
         }
     }
 
+    // 判断方块是否可以继续下落的方法
+    public boolean canFall(int m,int n) {
+        // 定义一个变量
+        int temp = 0x8000;
+        // 遍历4 * 4方格
+        for(int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if ((temp & rect) != 0) {
+                    // 判断该位置的下一行是否有方块
+                    if (data[m+1][n] == 1) {
+                        return false;
+                    }
+                }
+                n++;
+                temp >>= 1;
+            }
+            m++;
+            n = n - 4;
+        }
+        // 可以下落
+        return true;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
