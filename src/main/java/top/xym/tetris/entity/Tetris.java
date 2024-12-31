@@ -13,7 +13,10 @@ public class Tetris extends JFrame implements KeyListener {
     JTextArea[][] text;
     // 二维数组 data定义了每个格子的值 规定1代表有方块，0代表空白区域
     int[][] data;
-
+    // 显示游戏状态的标签
+    JLabel label1;
+    // 显示游戏分数的标签
+    JLabel label;
     public void initWidow() {
         // 设置窗口大小
         this.setSize(500, 750);
@@ -61,10 +64,41 @@ public class Tetris extends JFrame implements KeyListener {
         this.add(game_main, BorderLayout.CENTER);
     }
 
+    // 初始化游戏的说明面板
+    public void initExplainPanel() {
+        // 创建游戏的左说明面板
+        JPanel explain_left = new JPanel();
+        // 创建游戏的右说明面板
+        JPanel explain_right = new JPanel();
+        // 初始化格式布局
+        explain_left.setLayout(new GridLayout(4,1));
+        explain_right.setLayout(new GridLayout(2,1));
+        // 在左说明面板，添加说明文字
+        explain_left.add(new JLabel("按空格键，方块变形"));
+        explain_left.add(new JLabel("按左箭头，方块左移"));
+        explain_left.add(new JLabel("按右箭头，方块右移"));
+        explain_left.add(new JLabel("按下箭头，方块下落"));
+        // 设置标签的内容为蓝色字体
+        label1.setForeground(Color.BLUE);
+        // 把游戏状态标签，游戏分数标签，添加到右说明面板
+        explain_right.add(label);
+        explain_right.add(label1);
+        // 将左说明面板添加到窗口的左侧
+        this.add(explain_left, BorderLayout.WEST);
+        // 将右说明面板添加到窗口的右侧
+        this.add(explain_right, BorderLayout.EAST);
+    }
+
     public Tetris() {
         text = new JTextArea[game_x][game_y];
         data = new int[game_x][game_y];
+        // 初始化表示游戏状态的标签
+        label1 = new JLabel("游戏状态：正在游戏中！");
+        // 初始化表示游戏分数的标签
+        label = new JLabel("游戏得分为：0");
+
         initGamePanel();
+        initExplainPanel();
         initWidow();
     }
 
