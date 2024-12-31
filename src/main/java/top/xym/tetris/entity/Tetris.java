@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
+
 public class Tetris extends JFrame implements KeyListener {
     // 游戏的行数26，列数12
     private static final int game_x = 26;
@@ -272,6 +273,16 @@ public class Tetris extends JFrame implements KeyListener {
                 }
             }
         }
+    }
+
+    // 方块向下掉落一层的方法
+    public void fall(int m, int n) {
+        if (m > 0) {
+            // 清除上一层方块
+            clear(m-1, n);
+        }
+        // 重新绘制方块
+        draw(m, n);
     }
 
     @Override
