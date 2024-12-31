@@ -157,7 +157,32 @@ public class Tetris extends JFrame implements KeyListener {
 
                 // 判断方块是否可以下落
                 if (!canFall(x,y)) {
+                    // 将data置为1，表示有方块占用
+                    changeData(x,y);
+                    // 循环遍历4层，看是否有行可以消除
+                    for(int j = x; j < x + 4; j++) {
+                        //统计有多少列有方块
+                        int sum = 0;
+                        for(int k = 1; k < (game_y-2); k++) {
+                            if (data[j][k] == 1) {
+                                sum++;
+                            }
+                        }
 
+                        // 判断是否有一行可以被消除
+                        if (sum == (game_y-2)) {
+                            // 消除这一行
+                            removeRow(j);
+                        }
+                    }
+                    // 判断游戏是否失败
+                    for (int j = 1; j <= (game_y-2); j++) {
+                        if(data[3][j] == 1){
+                            isrunning = false;
+                            break;
+                        }
+                    }
+                    break;
                 } else {
                     // 层数+1
                     x++;
