@@ -121,8 +121,8 @@ public class Tetris extends JFrame implements KeyListener {
         // 初始化开始游戏的标识
         isrunning = true;
         // 初始化存放方块的数组
-        allRect = new int[] {0x00cc,0x8888,0x000f,0x888f,0xf111,0x111f,0x0eee,0xffff,0x0008,0x0888,0x000e,0x0088,
-        0x000c,0x08c8,0x00e4,0x04c4,0x004e,0x08c4,0x006c,0x04c8,0x00c6};
+        allRect = new int[] {0x00cc,0x8888,0x000f,0x888f,0xf888,0xf111,0x111f,0x0eee,0xffff,
+                0x0008,0x0888,0x000e,0x0088,0x000c,0x08c8,0x00e4,0x04c4,0x004e,0x08c4,0x006c,0x04c8,0x00c6};
     }
 
     public static void main(String[] args) {
@@ -175,20 +175,20 @@ public class Tetris extends JFrame implements KeyListener {
                         for(int j = x; j < x + 4; j++) {
                             //统计有多少列有方块
                             int sum = 0;
-                            for(int k = 1; k < (game_y-2); k++) {
+                            for(int k = 1; k <= (game_y - 2); k++) {
                                 if (data[j][k] == 1) {
                                     sum++;
                                 }
                             }
 
                             // 判断是否有一行可以被消除
-                            if (sum == (game_y-2)) {
+                            if (sum == (game_y - 2)) {
                                 // 消除这一行
                                 removeRow(j);
                             }
                         }
                         // 判断游戏是否失败
-                        for (int j = 1; j <= (game_y-2); j++) {
+                        for (int j = 1; j <= (game_y - 2); j++) {
                             if(data[3][j] == 1){
                                 isrunning = false;
                                 break;
@@ -217,7 +217,7 @@ public class Tetris extends JFrame implements KeyListener {
             for (int j = 0; j < 4; j++) {
                 if ((temp & rect) != 0) {
                     // 判断该位置的下一行是否有方块
-                    if (data[m+1][n] == 1) {
+                    if (data[m + 1][n] == 1) {
                         return false;
                     }
                 }
@@ -252,10 +252,10 @@ public class Tetris extends JFrame implements KeyListener {
     // 移除某一行方块，令以上方块掉落的方法
     public void removeRow(int row) {
         int temp = 100;
-        for(int i = row; i > 1; i--) {
-            for(int j = 1; j < (game_y-2); j++) {
+        for(int i = row; i >= 1; i--) {
+            for(int j = 1; j <= (game_y - 2); j++) {
                 // 进行覆盖
-                data[i][j] = data[i-1][j];
+                data[i][j] = data[i - 1][j];
             }
         }
         // 刷新游戏区域
@@ -263,7 +263,7 @@ public class Tetris extends JFrame implements KeyListener {
 
         // 方块加速
         if (time > temp) {
-            time -= temp;
+            time -= temp / 2;
         }
 
         score += temp;
@@ -274,9 +274,10 @@ public class Tetris extends JFrame implements KeyListener {
 
     // 刷新移除某一行后的游戏界面的方法
     public void reflesh(int row) {
+        // 遍历row行以上的游戏区域
         for (int i = row; i >= 1; i--) {
             for (int j = 1; j<= (game_y-2); j++) {
-                if (data[j][j] == 1) {
+                if (data[i][j] == 1) {
                     text[i][j].setBackground(Color.BLUE);
                 }else {
                     text[i][j].setBackground(Color.WHITE);
@@ -418,7 +419,7 @@ public class Tetris extends JFrame implements KeyListener {
                 }
             }
 
-            if (old >= 14 || old <= 17) {
+            if (old >= 14 && old <= 17) {
                 next = allRect[old + 1 > 17 ? 14 : old + 1];
 
                 if (canTurn(next, x, y)) {
